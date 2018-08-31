@@ -22,6 +22,8 @@ namespace ZipSolution
                 "*.vspscc",
                 "*.scc",
                 "upgradelog*.xml",
+                "package-lock.json",
+                "*.map",
             };
         static List<string> IgnoreFolderName = new List<string>(){
             "_UpgradeReport_Files",
@@ -42,7 +44,9 @@ namespace ZipSolution
             "$tf",
             ".vs",
             ".git",
-            ".idea"
+            ".idea",
+            "node_modules",
+            //"dist"
         };
         static void Main(string[] args)
         {
@@ -56,7 +60,7 @@ namespace ZipSolution
                 IgnoreExt.Add(Path.GetFileNameWithoutExtension(item) + ".sdf");
                 IgnoreExt.Add(Path.GetFileNameWithoutExtension(item) + ".opensdf");
             }
-            IgnoreExt.Add(exeFileName);
+           // IgnoreExt.Add(exeFileName);
 
             var filename = Path.Combine(userdir, dirName + DateTime.Now.ToString("_yyyyMMdd_HHmmss") + ".zip");
             var fs = File.Open(filename, FileMode.CreateNew);
