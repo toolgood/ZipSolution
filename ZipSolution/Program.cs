@@ -87,9 +87,10 @@ namespace ZipSolution
 
 
                 var filepath = file.FullName.Substring(mainDir.Length).TrimStart(@"\/".ToArray());
-                var fs = File.OpenRead(file.FullName);
+
+                var fs = File.ReadAllBytes(file.FullName);
                 writer.AddEntry(filepath, fs);
-                fs.Dispose();
+                 //fs.Dispose();
             }
         }
 
