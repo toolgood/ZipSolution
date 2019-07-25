@@ -1,14 +1,9 @@
-﻿using System;
+﻿using Ionic.Zip;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SoMain.Common.SharpCompress;
-using SoMain.Common.SharpCompress.Writer.Zip;
 using System.IO;
-using SoMain.Common.SharpCompress.Common;
-using SoMain.Common.SharpCompress.Writer;
+using System.Linq;
 using System.Text.RegularExpressions;
-using SoMain.Common.SharpCompress.Compressor.Deflate;
 
 namespace ZipSolution
 {
@@ -55,43 +50,36 @@ namespace ZipSolution
             var userdir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
             var dirName = Path.GetFileName(dir);
             var solutionFileName = Directory.GetFiles(dir, ".sln", SearchOption.AllDirectories);
-            foreach (var item in solutionFileName)
-            {
+            foreach (var item in solutionFileName) {
                 IgnoreExt.Add(Path.GetFileNameWithoutExtension(item) + ".sdf");
                 IgnoreExt.Add(Path.GetFileNameWithoutExtension(item) + ".opensdf");
             }
-           // IgnoreExt.Add(exeFileName);
+            // IgnoreExt.Add(exeFileName);
 
             var filename = Path.Combine(userdir, dirName + DateTime.Now.ToString("_yyyyMMdd_HHmmss") + ".zip");
             var fs = File.Open(filename, FileMode.CreateNew);
-            var ci = new CompressionInfo();
-            ci.Type = CompressionType.LZMA;
-            ci.DeflateCompressionLevel = CompressionLevel.BestCompression;
-            using (ZipWriter w = new ZipWriter(fs, ci, ""))
-            {
+
+            using (ZipFile zip = new ZipFile()) {
+                //zip.Password = "123456!";
                 var cDir = new DirectoryInfo(dir);
-                ReadFolder(cDir, dir, w);
+                ReadFolder(cDir, dir, zip);
+                zip.Save(fs);
             }
             fs.Dispose();
-
             OpenFolder(filename);
-
-
         }
-        static void ReadFolder(DirectoryInfo cDir, string mainDir, ZipWriter writer)
+
+        static void ReadFolder(DirectoryInfo cDir, string mainDir, ZipFile writer)
         {
             var dirs = cDir.GetDirectories();
-            foreach (var dir in dirs)
-            {
+            foreach (var dir in dirs) {
                 if (IgnoreFolderName.Contains(dir.Name)) continue;
                 ReadFolder(dir, mainDir, writer);
             }
             var files = cDir.GetFiles();
-            foreach (var file in files)
-            {
+            foreach (var file in files) {
                 bool Ignore = false;
-                foreach (var item in IgnoreExt)
-                {
+                foreach (var item in IgnoreExt) {
                     var re = item.Replace(".", "\\.").Replace("*", ".*");
                     if (Regex.IsMatch(file.Name, re, RegexOptions.IgnoreCase)) Ignore = true;
                 }
@@ -99,25 +87,24 @@ namespace ZipSolution
 
 
                 var filepath = file.FullName.Substring(mainDir.Length).TrimStart(@"\/".ToArray());
-                writer.Write(filepath, file);
+                var fs = File.OpenRead(file.FullName);
+                writer.AddEntry(filepath, fs);
+                fs.Dispose();
             }
-
-
         }
+
+         
 
         static void OpenFolder(string folderPath)
         {
             var ext = Path.GetExtension(folderPath);
 
             if (!File.Exists(folderPath)) return;
-            try
-            {
+            try {
                 System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("Explorer.exe");
                 psi.Arguments = " /select," + folderPath;
                 System.Diagnostics.Process.Start(psi);
-            }
-            catch (Exception)
-            {
+            } catch (Exception) {
                 System.Diagnostics.Process.Start(Path.GetDirectoryName(folderPath));
                 throw;
             }
