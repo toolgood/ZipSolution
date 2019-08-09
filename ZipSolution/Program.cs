@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ZipSolution
@@ -59,7 +60,7 @@ namespace ZipSolution
             var filename = Path.Combine(userdir, dirName + DateTime.Now.ToString("_yyyyMMdd_HHmmss") + ".zip");
             var fs = File.Open(filename, FileMode.CreateNew);
 
-            using (ZipFile zip = new ZipFile()) {
+            using (ZipFile zip = new ZipFile(Encoding.Default)) {
                 //zip.Password = "123456!";
                 var cDir = new DirectoryInfo(dir);
                 ReadFolder(cDir, dir, zip);
