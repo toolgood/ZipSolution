@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E78EEABB-AC9E-47E7-AA95-065FB004FA8E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>UpdateWebsite</RootNamespace>
+    <AssemblyName>UpdateWebsite</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Datas\ExcludeInfo.cs" />
+    <Compile Include="Datas\WebsiteInfo.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ComHelper.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\EncryptionAlgorithm.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\Events.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\Exceptions.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ExtractExistingFileAction.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\FileSelector.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\OffsetStream.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\Shared.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\WinZipAes.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipConstants.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipCrypto.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipDirEntry.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipEntry.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipEntry.Extract.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipEntry.Read.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipEntry.Write.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipEntrySource.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipErrorAction.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.AddUpdate.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.Check.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.Events.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.Extract.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.Read.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.Save.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.Selector.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.Static.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipFile.x-IEnumerable.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipInputStream.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipOutputStream.cs" />
+    <Compile Include="DotNetZip\Zip.Shared\ZipSegmentedStream.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\CRC32.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\Deflate.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\DeflateStream.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\GZipStream.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\Inflate.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\InfTree.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\ParallelDeflateOutputStream.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\Tree.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\Zlib.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\ZlibBaseStream.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\ZlibCodec.cs" />
+    <Compile Include="DotNetZip\Zlib.Shared\ZlibConstants.cs" />
+    <Compile Include="LitJson\IJsonWrapper.cs" />
+    <Compile Include="LitJson\JsonData.cs" />
+    <Compile Include="LitJson\JsonException.cs" />
+    <Compile Include="LitJson\JsonMapper.cs" />
+    <Compile Include="LitJson\JsonMockWrapper.cs" />
+    <Compile Include="LitJson\JsonReader.cs" />
+    <Compile Include="LitJson\JsonWriter.cs" />
+    <Compile Include="LitJson\Lexer.cs" />
+    <Compile Include="LitJson\Netstandard15Polyfill.cs" />
+    <Compile Include="LitJson\ParserToken.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Restore.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
