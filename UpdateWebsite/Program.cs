@@ -18,16 +18,29 @@ namespace UpdateWebsite
             try
             {
                 websites = ReadWebsiteInfos();
+                foreach (var websiteInfo in websites)
+                {
+                    websiteInfo.BackupFolder = websiteInfo.BackupFolder.Replace("/", "\\").Replace("\\\\", "\\").Trim('\\');
+                    websiteInfo.PreReleaseFolder = websiteInfo.PreReleaseFolder.Replace("/", "\\").Replace("\\\\", "\\").Trim('\\');
+                    websiteInfo.WebsiteFolder = websiteInfo.WebsiteFolder.Replace("/", "\\").Replace("\\\\", "\\").Trim('\\');
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message + "\n" + ex.StackTrace);
                 return;
             }
-            //默认 备份
-            if ((args.Length == 0 || (args.Length == 1 && args[0].ToLower() == "update")) && websites.Count == 1)
+            //默认 更新 并 备份 
+            if (args.Length == 0)
             {
-                FileBackup(websites[0]);
+                foreach (var item in websites)
+                {
+                    UpdateFiles(item);
+                }
+                return;
+            }
+            if (args.Length == 1 && args[0].ToLower() == "update" && websites.Count == 1)
+            {
                 UpdateFiles(websites[0]);
                 return;
             }
@@ -42,7 +55,7 @@ namespace UpdateWebsite
                 Console.WriteLine("参数错误，请使用下面的命令行");
                 Console.WriteLine("UpdateWebsite [update|restore]");
             }
-            if (args.Length == 1 )
+            if (args.Length == 1)
             {
                 Console.WriteLine("缺少参数，当前website.json内有多个项目，请使用下面的命令行");
                 Console.WriteLine("UpdateWebsite [update|restore] [code]");
@@ -60,7 +73,6 @@ namespace UpdateWebsite
             }
             if (args[0].ToLower() == "update")
             {
-                FileBackup(website);
                 UpdateFiles(website);
             }
             else
@@ -69,6 +81,9 @@ namespace UpdateWebsite
                 return;
             }
         }
+
+
+
 
         static void RestoreFile(WebsiteInfo websiteInfo)
         {
@@ -111,7 +126,7 @@ namespace UpdateWebsite
                 }
             }
             File.Delete(app_offline);
-            Directory.Delete(dir,true);
+            Directory.Delete(dir, true);
             Console.WriteLine("恢复成功...");
         }
 
@@ -128,6 +143,7 @@ namespace UpdateWebsite
 
         static void UpdateFiles(WebsiteInfo websiteInfo)
         {
+            Console.WriteLine("项目：" + websiteInfo.Name);
             List<string> files = new List<string>();
             var cDir = new DirectoryInfo(websiteInfo.PreReleaseFolder);
             if (cDir.Exists == false)
@@ -136,6 +152,13 @@ namespace UpdateWebsite
                 return;
             }
             GetUpdateFile(websiteInfo, cDir, files);
+            RemoveNoChnage(websiteInfo, websiteInfo.PreReleaseFolder, files);
+            if (files.Count == 0)
+            {
+                Console.WriteLine("文件无更新");
+                return;
+            }
+            FileBackup(websiteInfo);
 
             Console.WriteLine("开始更新...");
             var app_offline = Path.Combine(websiteInfo.WebsiteFolder, "app_offline.htm");
@@ -158,6 +181,22 @@ namespace UpdateWebsite
             File.Delete(app_offline);
             Console.WriteLine("更新成功...");
         }
+
+        static void RemoveNoChnage(WebsiteInfo websiteInfo, string rootFolder, List<string> outFiles)
+        {
+            for (int i = outFiles.Count - 1; i >= 0; i--)
+            {
+                var file = outFiles[i];
+                var tarFile = file.Replace(rootFolder, websiteInfo.WebsiteFolder);
+                if (File.Exists(tarFile) == false) { continue; } //新增的
+                var src = new FileInfo(file);
+                var tar = new FileInfo(tarFile);
+                if (src.Length != tar.Length) { continue; } //修改的
+                if (src.LastWriteTime != tar.LastWriteTime) { continue; } // 修改的
+                outFiles.RemoveAt(i);// 未修改
+            }
+        }
+
         static void GetUpdateFile(WebsiteInfo websiteInfo, DirectoryInfo cDir, List<string> outFiles)
         {
             var mainDir = websiteInfo.WebsiteFolder;
